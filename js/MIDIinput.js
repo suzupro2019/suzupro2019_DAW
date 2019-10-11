@@ -14,7 +14,7 @@ jQuery(function($){
   //音階
   for(var i = 0; i < MIDI_Mscale; i++){
     var Mscale_index = Math.ceil((MIDI_Mscale-i) / 12); //国際式はi-12 ヤマハ式はi-24
-    $(".Mscale_grid").append("<div class=\"Mscale_notes\"><p>" + Mscale_Do[i%12] + Mscale_index);
+    $(".Mscale_grid").append("<div class=\"Mscale_notes\"><p>" + Mscale_C[i%12] + Mscale_index);
   }
   //入力部分
   for(var j = 0; j < notes_measure; j++){
@@ -77,18 +77,13 @@ jQuery(function($){
   function synthset(time, note) {
     polysynth.triggerAttackRelease(note, '8n', time);
   }
-  var MIDI_measure = []; //小節:拍:拍内小節
-  var MIDI_Melody = []; //音名
-  var notes_count = 0;
+  var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
   for(x=0; x<2; x++){
     for(y=0; y<4; y++){
       for(z=0; z<4; z++){
-        MIDI_measure.push(x+":"+y+":"+z);
+        MIDI_Melody.push([x+":"+y+":"+z, [""]]);
       }
     }
-  }
-  for(a=0; a<notes_measure; a++){
-    MIDI_Melody.push([""]);
   }
 
   $(".notes").mousedown(function () {
@@ -101,18 +96,18 @@ jQuery(function($){
     if($(this).hasClass('highlighted') == false){
       polysynth.triggerAttackRelease(Mscale_C[note_name]+pitch, '16n');
 
-      if(MIDI_Melody[measure_count] == ""){
-        MIDI_Melody[measure_count].splice(0, 1, MIDI_note);
+      if(MIDI_Melody[measure_count][1] == ""){
+        MIDI_Melody[measure_count][1].splice(0, 1, MIDI_note);
         console.log("新規追加");
         console.log(MIDI_Melody);
       }else{
-        MIDI_Melody[measure_count].push(MIDI_note);
+        MIDI_Melody[measure_count][1].push(MIDI_note);
         console.log("追加");
         console.log(MIDI_Melody);
       }
     }else{
-      var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count]);
-      MIDI_Melody[measure_count].splice(highlight_index, 1);
+      var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count][1]);
+      MIDI_Melody[measure_count][1].splice(highlight_index, 1);
       console.log("削除");
       console.log(MIDI_Melody);
     }
@@ -128,18 +123,18 @@ jQuery(function($){
       if($(this).hasClass('highlighted') == false){
         polysynth.triggerAttackRelease(Mscale_C[note_name]+pitch, '16n');
 
-        if(MIDI_Melody[measure_count] == ""){
-          MIDI_Melody[measure_count].splice(0, 1, MIDI_note);
+        if(MIDI_Melody[measure_count][1] == ""){
+          MIDI_Melody[measure_count][1].splice(0, 1, MIDI_note);
           console.log("新規追加");
           console.log(MIDI_Melody);
         }else{
-          MIDI_Melody[measure_count].push(MIDI_note);
+          MIDI_Melody[measure_count][1].push(MIDI_note);
           console.log("追加");
           console.log(MIDI_Melody);
         }
       }else{
-        var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count]);
-        MIDI_Melody[measure_count].splice(highlight_index, 1);
+        var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count][1]);
+        MIDI_Melody[measure_count][1].splice(highlight_index, 1);
         console.log("削除");
         console.log(MIDI_Melody);
       }
@@ -168,15 +163,51 @@ jQuery(function($){
     isMouseDown = false;
   });
   
+  //受け渡された情報から表示する 読み込みに使用
+  var test_data = [
+    ["0:0:0", ["C4", "E4", "G4"]],
+    ["0:0:1", [""]],
+    ["0:0:2", ["C4", "E4", "G4"]],
+    ["0:0:3", []],
+    ["0:1:0", ["E4", "G4", "B4"]],
+    ["0:1:1", []],
+    ["0:1:2", ["E4", "G4", "B4"]],
+    ["0:1:3", [""]]
+  ]
+  var Mscale_number = {"C":11, "C#":10, "D":9, "D#":8, "E":7, "F":6, "F#":5, "G":4, "G#":3, "A":2, "A#":1, "B":0}; //逆順
+  for(y=0; y<test_data.length; y++){
+    if(test_data[y][1].length > 0 && test_data[y][1][0] != ""){
+      for(z=0; z<test_data[y][1].length; z++){
+        if(MIDI_Melody[y][1] == ""){
+          MIDI_Melody[y][1].splice(0, 1, test_data[y][1][0]);
+        }else{
+          MIDI_Melody[y][1].push(test_data[y][1][z]);
+        }
+        var pitch = test_data[y][1][z].slice(-1);
+        if(test_data[y][1][z].length == 3){ //C#3
+          var note_name = test_data[y][1][z].slice(0, 2);
+        }else{
+          var note_name = test_data[y][1][z].slice(0, 1);
+        }
+        $(".notes").eq(
+          Mscale_number[note_name] + (6-pitch)*12 + y*MIDI_Mscale
+        ).addClass("highlighted");
+      }
+    }
+  }
+  console.log("保存データ読み込み")
+  console.log(MIDI_Melody);
+  
+  
   //再生処理
   Tone.Transport.bpm.value = 120;
   var play_flg = 0;
   $("#play").click(function(){
     if(play_flg == 0){
-      var play_MIDI_Melody = [];
+      var play_MIDI_Melody = []; //再生用に無駄な情報を省いたもの
       for(z=0; z<notes_measure; z++){
-        if(MIDI_Melody[z].length > 0 && MIDI_Melody[z][0] != ""){
-          play_MIDI_Melody.push([MIDI_measure[z],MIDI_Melody[z]]);
+        if(MIDI_Melody[z][1].length > 0 && MIDI_Melody[z][1][0] != ""){
+          play_MIDI_Melody.push(MIDI_Melody[z]);
         }
       }
       console.log("再生");
