@@ -4,12 +4,12 @@ const add = (x) => {
 
 /*再生ボタンと停止ボタン*/
 var start = true;
-document.getElementById("▷").onclick = function() {
+document.getElementById("play").onclick = function() {
   if(start == true){
-    document.getElementById("▷").innerHTML = "□";
+    document.getElementById("play").innerHTML = "□";
     start = false;
   }else{
-    document.getElementById("▷").innerHTML = "▷";
+    document.getElementById("play").innerHTML = "▷";
     start = true;
   }
 };

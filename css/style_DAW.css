@@ -277,6 +277,7 @@ li a {
   flex-grow: 0;
   flex-shrink: 0;
   border: 1px solid #333;
+  box-sizing: border-box;
   background-color: white;
   width: 1600px;
   height: 100%;
@@ -296,6 +297,14 @@ li a {
 .notes.highlighted {
   background-color: deeppink;
 }
+/*追記 191010*/
+.measure_first_notes{
+  border-left: 1px solid rgba(20, 20, 20, 1);
+}
+.measure_beat_notes{
+  border-left: 1px solid rgba(20, 20, 20, 0.8);
+}
+/*ここまで*/
 .Mscale_notes{
   display: flex;
   justify-content: center;
