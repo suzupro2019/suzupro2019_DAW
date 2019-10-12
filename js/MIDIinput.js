@@ -73,9 +73,44 @@ jQuery(function($){
   
   //MIDI色切り替え, 音声出力
   var isMouseDown = false;
-  let polysynth = new Tone.PolySynth().toMaster();
-  function synthset(time, note) {
-    polysynth.triggerAttackRelease(note, '8n', time);
+  var polysynth = new Tone.PolySynth().toMaster(); //Melody用
+  var plucksynth = new Tone.PluckSynth().toMaster(); //Bass用
+  /*Samplerについての注意事項
+  初期状態ではXHRでローカルファイルを持ってくることはセキュリティ上できないため、
+  ローカルで起動する場合はWebブラウザの設定が必要。
+  Firefoxならstrict_origin_policy = True(既定値) → Falseにする。(非推奨)*/
+  var Piano_sampler = new Tone.Sampler({
+    "C4" : "./audio/Piano_C4.wav",
+  }, {attack:0.05 ,release:1.0}).toMaster();
+  var Drum_sampler = new Tone.Sampler({
+    "C1" : "./audio/Drum/Kick_C1.wav",
+    "C#1" : "./audio/Drum/Snare_Cs1.wav",
+    "D1" : "./audio/Drum/Snare_D1.wav",
+    "E1" : "./audio/Drum/Snare_E1.wav",
+    "F1" : "./audio/Drum/LowTom_F1.wav",
+    "F#1" : "./audio/Drum/CH_Fs1.wav",
+    "G1" : "./audio/Drum/LowTom_G1.wav",
+    "G#1" : "./audio/Drum/CHF_Gs1.wav",
+    "A1" : "./audio/Drum/MidTom_A1.wav",
+    "A#1" : "./audio/Drum/OH_As1.wav",
+    "B1" : "./audio/Drum/MidTom_B1.wav",
+    "C2" : "./audio/Drum/HighTom_C2.wav",
+    "C#2" : "./audio/Drum/CrashLeft_Cs2.wav",
+    "D2" : "./audio/Drum/HighTom_D2.wav",
+    "D#2" : "./audio/Drum/Ride_Ds2.wav",
+    "E2" : "./audio/Drum/OH_E2.wav"
+  }).toMaster();
+  function addMelody(time, note) {
+    polysynth.triggerAttackRelease(note, '16n', time);
+  }
+  function addChord(time, note) {
+    polysynth.triggerAttackRelease(note, '16n', time);
+  }
+  function addBass(time, note) {
+    plucksynth.triggerAttackRelease(note, '16n', time);
+  }
+  function addDrum(time, note) {
+    Drum_sampler.triggerAttackRelease(note, '1n', time);
   }
   var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
   for(x=0; x<2; x++){
@@ -164,30 +199,55 @@ jQuery(function($){
   });
   
   //受け渡された情報から表示する 読み込みに使用
-  var test_data = [
-    ["0:0:0", ["C4", "E4", "G4"]],
+  //Polysynthは和音に対応 三次元配列で記述可
+  var test_Melody = [
+    ["0:0:0", ["A5"]],
     ["0:0:1", [""]],
-    ["0:0:2", ["C4", "E4", "G4"]],
+    ["0:0:2", ["F5"]],
     ["0:0:3", []],
-    ["0:1:0", ["E4", "G4", "B4"]],
+    ["0:1:0", ["G5"]],
     ["0:1:1", []],
-    ["0:1:2", ["E4", "G4", "B4"]],
-    ["0:1:3", [""]]
-  ]
+    ["0:1:2", ["A5"]],
+    ["0:1:3", [""]],
+    ["0:2:0", []],
+    ["0:2:1", [""]],
+    ["0:2:2", ["F6"]],
+    ["0:2:3", []],
+    ["0:3:0", ["E6"]],
+    ["0:3:1", []],
+    ["0:3:2", ["F6"]],
+    ["0:3:3", []],
+    ["1:0:0", ["E6"]],
+    ["1:0:1", [""]],
+    ["1:0:2", ["F6"]],
+    ["1:0:3", []],
+    ["1:1:0", ["E6"]],
+    ["1:1:1", []],
+    ["1:1:2", [""]],
+    ["1:1:3", [""]],
+    ["1:2:0", ["C6"]],
+    ["1:2:1", [""]],
+    ["1:2:2", ["D6"]],
+    ["1:2:3", []],
+    ["1:3:0", ["A5"]],
+    ["1:3:1", []],
+    ["1:3:2", ["G5"]],
+    ["1:3:3", []]
+  ];
   var Mscale_number = {"C":11, "C#":10, "D":9, "D#":8, "E":7, "F":6, "F#":5, "G":4, "G#":3, "A":2, "A#":1, "B":0}; //逆順
-  for(y=0; y<test_data.length; y++){
-    if(test_data[y][1].length > 0 && test_data[y][1][0] != ""){
-      for(z=0; z<test_data[y][1].length; z++){
+  for(y=0; y<test_Melody.length; y++){
+    if(test_Melody[y][1].length > 0 && test_Melody[y][1][0] != ""){
+      for(z=0; z<test_Melody[y][1].length; z++){
         if(MIDI_Melody[y][1] == ""){
-          MIDI_Melody[y][1].splice(0, 1, test_data[y][1][0]);
+          MIDI_Melody[y][1].splice(0, 1, test_Melody[y][1][0]);
         }else{
-          MIDI_Melody[y][1].push(test_data[y][1][z]);
+          MIDI_Melody[y][1].push(test_Melody[y][1][z]);
         }
-        var pitch = test_data[y][1][z].slice(-1);
-        if(test_data[y][1][z].length == 3){ //C#3
-          var note_name = test_data[y][1][z].slice(0, 2);
+        var pitch = test_Melody[y][1][z].slice(-1);
+        if(test_Melody[y][1][z].length == 3){ //C#3
+          var note_name = test_Melody[y][1][z].slice(0, 2);
         }else{
-          var note_name = test_data[y][1][z].slice(0, 1);
+          var note_name = test_Melody[y][1][z].slice(0, 1);
         }
         $(".notes").eq(
           Mscale_number[note_name] + (6-pitch)*12 + y*MIDI_Mscale
@@ -198,21 +258,152 @@ jQuery(function($){
   console.log("保存データ読み込み")
   console.log(MIDI_Melody);
   
+  //コード生成
+  var test_chord = [
+    ["0:0:0", ["D3", "F3", "A3"]],
+    ["0:0:1", [""]],
+    ["0:0:2", []],
+    ["0:0:3", []],
+    ["0:1:0", ["D3", "F3", "A3"]],
+    ["0:1:1", []],
+    ["0:1:2", ["D3", "F3", "A3"]],
+    ["0:1:3", [""]],
+    ["0:2:0", [""]],
+    ["0:2:1", [""]],
+    ["0:2:2", ["D3", "F3", "A3"]],
+    ["0:2:3", [""]],
+    ["0:3:0", ["D3", "F3", "A3"]],
+    ["0:3:1", [""]],
+    ["0:3:2", []],
+    ["0:3:3", [""]],
+    ["1:0:0", ["A3", "C4", "E4"]],
+    ["1:0:1", [""]],
+    ["1:0:2", []],
+    ["1:0:3", []],
+    ["1:1:0", ["A3", "C4", "E4"]],
+    ["1:1:1", []],
+    ["1:1:2", ["A3", "C4", "E4"]],
+    ["1:1:3", [""]],
+    ["1:2:0", [""]],
+    ["1:2:1", [""]],
+    ["1:2:2", ["A3", "C4", "E4"]],
+    ["1:2:3", [""]],
+    ["1:3:0", ["A3", "C4", "E4"]],
+    ["1:3:1", [""]],
+    ["1:3:2", []],
+    ["1:3:3", [""]]
+  ];
+  
+  //ベース生成
+  //Polysynth,sampler以外は二次元配列で記述
+  var test_bass = [
+    ["0:0:0", "D2"],
+    ["0:0:1", ""],
+    ["0:0:2", "D2"],
+    ["0:0:3", ""],
+    ["0:1:0", "D2"],
+    ["0:1:1", ""],
+    ["0:1:2", "D2"],
+    ["0:1:3", ""],
+    ["0:2:0", ""],
+    ["0:2:1", ""],
+    ["0:2:2", "D2"],
+    ["0:2:3", ""],
+    ["0:3:0", "D2"],
+    ["0:3:1", ""],
+    ["0:3:2", "F2"],
+    ["0:3:3", ""],
+    ["1:0:0", "A2"],
+    ["1:0:1", ""],
+    ["1:0:2", "A2"],
+    ["1:0:3", ""],
+    ["1:1:0", "A2"],
+    ["1:1:1", ""],
+    ["1:1:2", "A2"],
+    ["1:1:3", ""],
+    ["1:2:0", ""],
+    ["1:2:1", ""],
+    ["1:2:2", "A2"],
+    ["1:2:3", ""],
+    ["1:3:0", "A2"],
+    ["1:3:1", ""],
+    ["1:3:2", "A2"],
+    ["1:3:3", ""]
+  ];
+  
+  //ドラム生成
+  var test_drum = [
+    ["0:0:0", ["C1", "G#1", "C#2"]],
+    ["0:0:1", [""]],
+    ["0:0:2", ["G#1"]],
+    ["0:0:3", [""]],
+    ["0:1:0", ["G#1"]],
+    ["0:1:1", [""]],
+    ["0:1:2", ["C1", "G#1"]],
+    ["0:1:3", ""],
+    ["0:2:0", ["G#1"]],
+    ["0:2:1", [""]],
+    ["0:2:2", ["G#1"]],
+    ["0:2:3", [""]],
+    ["0:3:0", ["C1", "A#1"]],
+    ["0:3:1", [""]],
+    ["0:3:2", ["G#1"]],
+    ["0:3:3", [""]],
+    ["1:0:0", ["C1", "G#1", "C#2"]],
+    ["1:0:1", [""]],
+    ["1:0:2", ["G#1"]],
+    ["1:0:3", [""]],
+    ["1:1:0", ["G#1"]],
+    ["1:1:1", [""]],
+    ["1:1:2", ["C1", "G#1"]],
+    ["1:1:3", ""],
+    ["1:2:0", ["G#1"]],
+    ["1:2:1", [""]],
+    ["1:2:2", ["G#1"]],
+    ["1:2:3", [""]],
+    ["1:3:0", ["C1", "A#1"]],
+    ["1:3:1", [""]],
+    ["1:3:2", ["G#1"]],
+    ["1:3:3", [""]]
+  ];
   
   //再生処理
-  Tone.Transport.bpm.value = 120;
+  Tone.Transport.bpm.value = 220; //bpm
   var play_flg = 0;
   $("#play").click(function(){
     if(play_flg == 0){
       var play_MIDI_Melody = []; //再生用に無駄な情報を省いたもの
-      for(z=0; z<notes_measure; z++){
+      var play_MIDI_Chord =[];
+      var play_MIDI_Bass =[];
+      var play_MIDI_Drum =[];
+      for(z=0; z<test_bass.length; z++){ //本来はz<notes_measure
         if(MIDI_Melody[z][1].length > 0 && MIDI_Melody[z][1][0] != ""){
           play_MIDI_Melody.push(MIDI_Melody[z]);
         }
+        if(test_chord[z][1].length > 0 && test_chord[z][1][0] != ""){
+          play_MIDI_Chord.push(test_chord[z]);
+        }
+        if(test_bass[z][1] != ""){
+          play_MIDI_Bass.push(test_bass[z]);
+        }
+        if(test_drum[z][1].length > 0 && test_drum[z][1][0] != ""){
+          play_MIDI_Drum.push(test_drum[z]);
+        }
       }
       console.log("再生");
-      console.log(play_MIDI_Melody);
-      var Music = new Tone.Part(synthset, play_MIDI_Melody).start();
+      console.log(play_MIDI_Chord);
+      if(mute_flg[0] == 0){
+        var Melody = new Tone.Part(addMelody, play_MIDI_Melody).start();
+      }
+      if(mute_flg[1] == 0){
+        var Chord = new Tone.Part(addChord, play_MIDI_Chord).start();
+      }
+      if(mute_flg[2] == 0){
+        var Bass = new Tone.Part(addBass, play_MIDI_Bass).start();
+      }
+      if(mute_flg[3] == 0){
+        var Drum = new Tone.Part(addDrum, play_MIDI_Drum).start();
+      }
       Tone.Transport.start();
       play_flg = 1;
     }else{
