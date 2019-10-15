@@ -3,14 +3,11 @@ const add = (x) => {
 }
 
 /*再生ボタンと停止ボタン*/
-var start = true;
 document.getElementById("play").onclick = function() {
-  if(start == true){
+  if(play_flg == 0){
     document.getElementById("play").innerHTML = "□";
-    start = false;
   }else{
     document.getElementById("play").innerHTML = "▷";
-    start = true;
   }
 };
 

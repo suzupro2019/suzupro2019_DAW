@@ -2,9 +2,24 @@ jQuery(function($){
   //MIDIinput_grids生成 ?191009
   var MIDI_Mscale = 72; //音階数 重すぎるのでヤマハ式のC1〜B6まで(72)
   var notes_measure = 32; //notesの列数 (デフォルト>> 16小節 * 16拍 = 216)
-  var notes_amount = MIDI_Mscale * notes_measure;
   var Mscale_Do = ["ド", "ド#", "レ", "レ#", "ミ", "ファ", "ファ#", "ソ", "ソ#", "ラ", "ラ#", "シ"];
   var Mscale_C = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  var Keys = {"C":0,"C#":1,"Db":1,"D":2,"D#":3,"Eb":3,"E":4,"F":5,"F#":6,"Gb":6,"G":7,"G#":8,"Ab":8,"A":9,"A#":10,"Bb":10,"B":11};
+  var chord_list =[ //C3のインデックス基準 テンションコードは別で付与 逆順で表示しているため、+-が逆
+    [0, 0, 0], //Major
+    [0, 1, 0], //Minor
+    [0, 2, 0], //sus2
+    [0, -1, 0], //sus4
+    [0, 0, -1], //aug
+    [0, 1, 1] //dim
+  ]
+  var Tensions = [
+    2, //6th
+    3, //7th
+    4, //M7th
+    6, //add9thb
+    7 //add9th
+  ];
   Mscale_Do.reverse(); //逆から表示するために反転している
   Mscale_C.reverse(); //同上
   //小節
@@ -113,7 +128,7 @@ jQuery(function($){
     Drum_sampler.triggerAttackRelease(note, '1n', time);
   }
   var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
-  for(x=0; x<2; x++){
+  for(x=0; x<notes_measure/16; x++){ //
     for(y=0; y<4; y++){
       for(z=0; z<4; z++){
         MIDI_Melody.push([x+":"+y+":"+z, [""]]);
@@ -238,7 +253,7 @@ jQuery(function($){
   for(y=0; y<test_Melody.length; y++){
     if(test_Melody[y][1].length > 0 && test_Melody[y][1][0] != ""){
       for(z=0; z<test_Melody[y][1].length; z++){
-        if(MIDI_Melody[y][1] == ""){
+        if(MIDI_Melody[y][1] == ""){ //音情報
           MIDI_Melody[y][1].splice(0, 1, test_Melody[y][1][0]);
         }else{
           MIDI_Melody[y][1].push(test_Melody[y][1][z]);
@@ -249,7 +264,7 @@ jQuery(function($){
         }else{
           var note_name = test_Melody[y][1][z].slice(0, 1);
         }
-        $(".notes").eq(
+        $(".notes").eq( //highlighted
           Mscale_number[note_name] + (6-pitch)*12 + y*MIDI_Mscale
         ).addClass("highlighted");
       }
@@ -258,41 +273,119 @@ jQuery(function($){
   console.log("保存データ読み込み")
   console.log(MIDI_Melody);
   
-  //コード生成
-  var test_chord = [
-    ["0:0:0", ["D3", "F3", "A3"]],
+  //コード(文字列からの生成)
+  var chord_stroke = [ //CMaj基準
+    ["0:0:0", [47, 43, 40]],
     ["0:0:1", [""]],
     ["0:0:2", []],
     ["0:0:3", []],
-    ["0:1:0", ["D3", "F3", "A3"]],
+    ["0:1:0", [47, 43, 40]],
     ["0:1:1", []],
-    ["0:1:2", ["D3", "F3", "A3"]],
+    ["0:1:2", [47, 43, 40]],
     ["0:1:3", [""]],
     ["0:2:0", [""]],
     ["0:2:1", [""]],
-    ["0:2:2", ["D3", "F3", "A3"]],
+    ["0:2:2", [47, 43, 40]],
     ["0:2:3", [""]],
-    ["0:3:0", ["D3", "F3", "A3"]],
+    ["0:3:0", [47, 43, 40]],
     ["0:3:1", [""]],
     ["0:3:2", []],
     ["0:3:3", [""]],
-    ["1:0:0", ["A3", "C4", "E4"]],
+    ["1:0:0", [47, 43, 40]],
     ["1:0:1", [""]],
     ["1:0:2", []],
     ["1:0:3", []],
-    ["1:1:0", ["A3", "C4", "E4"]],
+    ["1:1:0", [47, 43, 40]],
     ["1:1:1", []],
-    ["1:1:2", ["A3", "C4", "E4"]],
+    ["1:1:2", [47, 43, 40]],
     ["1:1:3", [""]],
     ["1:2:0", [""]],
     ["1:2:1", [""]],
-    ["1:2:2", ["A3", "C4", "E4"]],
+    ["1:2:2", [47, 43, 40]],
     ["1:2:3", [""]],
-    ["1:3:0", ["A3", "C4", "E4"]],
+    ["1:3:0", [47, 43, 40]],
     ["1:3:1", [""]],
     ["1:3:2", []],
     ["1:3:3", [""]]
   ];
+  var test_chord2_original = "Dm Am"; //Chainerからの出力
+  var test_chord2 = test_chord2_original.split(" ");
+  var bassline = [];
+  var key = [];
+  var chord = [];
+  var tension = [];
+  var MIDI_chord = [];
+  var cc_index = 0;
+  for(var x=0; x<test_chord2.length; x++){
+    if(test_chord2[x].indexOf("/") >= 0){
+      bassline.push(test_chord2[x].slice(test_chord2[x].indexOf("/")+1));
+    }else if(test_chord2[x].indexOf("#") == 1 || test_chord2[x].indexOf("b") == 1){
+      bassline.push(test_chord2[x].slice(0, 2));
+    }else{
+      bassline.push(test_chord2[x].slice(0, 1));
+    }
+    
+    if(test_chord2[x].indexOf("#") == 1 || test_chord2[x].indexOf("b") == 1){
+      key.push(test_chord2[x].slice(0, 2));
+    }else{
+      key.push(test_chord2[x].slice(0, 1));
+    }
+    
+    if(test_chord2[x].indexOf("dim") >= 0){
+      chord.push(chord_list[5]);
+    }else if(test_chord2[x].indexOf("aug") >= 0){
+      chord.push(chord_list[4]);
+    }else if(test_chord2[x].indexOf("sus4") >= 0){
+      chord.push(chord_list[3]);
+    }else if(test_chord2[x].indexOf("sus2") >= 0){
+      chord.push(chord_list[2]);
+    }else if(test_chord2[x].indexOf("m") >= 0){
+      chord.push(chord_list[1]);
+    }else{
+      chord.push(chord_list[0]);
+    }
+    
+    if(test_chord2[x].indexOf("add9b") >= 0){
+      tension.push(Tensions[3]);
+    }else if(test_chord2[x].indexOf("add9") >= 0){
+      tension.push(Tensions[4]);
+    }else if(test_chord2[x].indexOf("M7") >= 0){
+      tension.push(Tensions[2]);
+    }else if(test_chord2[x].indexOf("7") >= 0){
+      tension.push(Tensions[1]);
+    }else if(test_chord2[x].indexOf("6") >= 0){
+      tension.push(Tensions[0]);
+    }else{
+      tension.push(0);
+    }
+    
+    for(var y=0; y<16; y++){
+      if(chord_stroke[x*16+y][1].length > 0 && chord_stroke[x*16+y][1][0] != ""){
+        MIDI_chord.push(chord_stroke[x*16+y]);
+        for(var z=0; z<3; z++){
+          MIDI_chord[cc_index][1][z] -= Keys[key[x]];
+          MIDI_chord[cc_index][1][z] += chord[x][z];
+        }
+        if(tension[x] != 0){
+          MIDI_chord[cc_index][1].push(MIDI_chord[cc_index][1][2] - tension[x]);
+        }
+        for(var aa=0; aa<MIDI_chord[cc_index][1].length; aa++){
+          var note_name = MIDI_chord[cc_index][1][aa] % 12;
+          var pitch =  Math.ceil((MIDI_Mscale-MIDI_chord[cc_index][1][aa]%MIDI_Mscale) / 12);
+          var MIDI_note = Mscale_C[note_name] + pitch;
+          MIDI_chord[cc_index][1].splice(aa, 1, MIDI_note);
+        }
+        cc_index += 1;
+      }
+    }
+  }
+  /*
+  console.log(bassline);
+  console.log(key);
+  console.log(chord);
+  console.log(tension);
+  */
+  console.log(MIDI_chord);
   
   //ベース生成
   //Polysynth,sampler以外は二次元配列で記述
@@ -330,6 +423,21 @@ jQuery(function($){
     ["1:3:2", "A2"],
     ["1:3:3", ""]
   ];
+  
+  //ベース(コードからの自動生成)
+  /*2拍に1回のペースでルート音を演奏。(C2〜B2)
+  分数コードの場合は、該当する音を演奏。*/
+  var MIDI_bass = [];
+  for(x=0; x<notes_measure/16; x++){ //
+    for(y=0; y<4; y++){
+      for(z=0; z<4; z++){
+        if(z%2 == 0){
+          MIDI_bass.push([x+":"+y+":"+z, bassline[x]+2]);
+        }
+      }
+    }
+  }
+  console.log(MIDI_bass);
   
   //ドラム生成
   var test_drum = [
@@ -369,37 +477,26 @@ jQuery(function($){
   
   //再生処理
   Tone.Transport.bpm.value = 220; //bpm
-  var play_flg = 0;
   $("#play").click(function(){
     if(play_flg == 0){
       var play_MIDI_Melody = []; //再生用に無駄な情報を省いたもの
-      var play_MIDI_Chord =[];
-      var play_MIDI_Bass =[];
       var play_MIDI_Drum =[];
-      for(z=0; z<test_bass.length; z++){ //本来はz<notes_measure
+      for(z=0; z<test_drum.length; z++){ //本来はz<notes_measure
         if(MIDI_Melody[z][1].length > 0 && MIDI_Melody[z][1][0] != ""){
           play_MIDI_Melody.push(MIDI_Melody[z]);
-        }
-        if(test_chord[z][1].length > 0 && test_chord[z][1][0] != ""){
-          play_MIDI_Chord.push(test_chord[z]);
-        }
-        if(test_bass[z][1] != ""){
-          play_MIDI_Bass.push(test_bass[z]);
         }
         if(test_drum[z][1].length > 0 && test_drum[z][1][0] != ""){
           play_MIDI_Drum.push(test_drum[z]);
         }
       }
-      console.log("再生");
-      console.log(play_MIDI_Chord);
       if(mute_flg[0] == 0){
         var Melody = new Tone.Part(addMelody, play_MIDI_Melody).start();
       }
       if(mute_flg[1] == 0){
-        var Chord = new Tone.Part(addChord, play_MIDI_Chord).start();
+        var Chord = new Tone.Part(addChord, MIDI_chord).start();
       }
       if(mute_flg[2] == 0){
-        var Bass = new Tone.Part(addBass, play_MIDI_Bass).start();
+        var Bass = new Tone.Part(addBass, MIDI_bass).start();
       }
       if(mute_flg[3] == 0){
         var Drum = new Tone.Part(addDrum, play_MIDI_Drum).start();
