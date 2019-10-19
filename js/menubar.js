@@ -7,11 +7,9 @@ $('#play').click(function() {
   if(play_flg == 0){
     $('.play-btn').css('display','none');
     $('.stop-btn').css('display','block');
-    play_flg = 1;
   }else{
     $('.play-btn').css('display','block');
     $('.stop-btn').css('display','none');
-    play_flg = 0;
   }
 })
 
@@ -26,3 +24,10 @@ $('#help').click(function() {
     help_flg = 0;
   }
 })
+
+//BPM
+$('.bpm_value').html(bpm);
+$('.bpm_slider').on('input change', function() {
+  bpm = $(this).val();
+  $('.bpm_value').html(bpm);
+});

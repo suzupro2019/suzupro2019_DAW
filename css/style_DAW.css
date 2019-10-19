@@ -32,7 +32,9 @@ boby{
 
 /*menuテーブル*/
 table td {
+  position: relative;
   width:120px;
+  max-width: 230px;
   height:70px;
   text-align:center;
   vertical-align:middle;
@@ -53,15 +55,28 @@ td.exbar{
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
-
 td.extime{
   width:170px;
   height:70px;
 }
+.bpm_slider{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  opacity: 0;
+}
 .gr{
+  overflow: auto;
   margin: 5px 0 0 0;
   font-size: 28px;
   color: #59DE64;
+  white-space: nowrap;
+  -ms-overflow-style:none;
+}
+.gr::-webkit-scrollbar{
+ display:none;
 }
 .wh{
   margin: 0 0 5px 0;
@@ -313,14 +328,15 @@ label span{
 .notes.highlighted {
   background-color: deeppink;
 }
-/*追記 191010*/
+.notes.ml_highlighted{
+  
+}
 .measure_first_notes{
   border-left: 1px solid rgba(20, 20, 20, 1);
 }
 .measure_beat_notes{
   border-left: 1px solid rgba(20, 20, 20, 0.8);
 }
-/*ここまで*/
 .Mscale_notes{
   display: flex;
   justify-content: center;
