@@ -3,22 +3,26 @@ const add = (x) => {
 }
 
 /*再生ボタンと停止ボタン*/
-document.getElementById("play").onclick = function() {
+$('#play').click(function() {
   if(play_flg == 0){
-    document.getElementById("play").innerHTML = "□";
+    $('.play-btn').css('display','none');
+    $('.stop-btn').css('display','block');
+    play_flg = 1;
   }else{
-    document.getElementById("play").innerHTML = "▷";
+    $('.play-btn').css('display','block');
+    $('.stop-btn').css('display','none');
+    play_flg = 0;
   }
-};
+})
 
 /*helpボタン*/
-var help = true;
-document.getElementById("help").onclick = function() {
-  if(help == true){
-    document.getElementById("numbpm").style.backgroundColor = "#FFFF8A";
-    help = false;
+var help_flg = 0;
+$('#help').click(function() {
+  if(help_flg == 0){
+    $('#help').css('background','#ffa500');
+    help_flg = 1;
   }else{
-    document.getElementById("numbpm").style.backgroundColor = "white";
-    help = true
+    $('#help').css('background','#8fdfda');
+    help_flg = 0;
   }
-};
+})

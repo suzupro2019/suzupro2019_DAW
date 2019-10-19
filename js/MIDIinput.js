@@ -1,7 +1,7 @@
 jQuery(function($){
   //MIDIinput_grids生成 ?191009
   var MIDI_Mscale = 72; //音階数 重すぎるのでヤマハ式のC1〜B6まで(72)
-  var notes_measure = 128; //notesの列数 (デフォルト>> 16小節 * 16拍 = 256) 重い場合はここを調整してください
+  var notes_measure = 32; //notesの列数 (デフォルト>> 16小節 * 16拍 = 256) 重い場合はここを調整してください
   var Mscale_Do = ["ド", "ド#", "レ", "レ#", "ミ", "ファ", "ファ#", "ソ", "ソ#", "ラ", "ラ#", "シ"];
   var Mscale_C = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   var Keys = {"C":0,"C#":1,"Db":1,"D":2,"D#":3,"Eb":3,"E":4,"F":5,"F#":6,"Gb":6,"G":7,"G#":8,"Ab":8,"A":9,"A#":10,"Bb":10,"B":11};
@@ -746,11 +746,9 @@ jQuery(function($){
         var Drum = new Tone.Part(addDrum, play_MIDI_Drum).start();
       }
       Tone.Transport.start();
-      play_flg = 1;
     }else{
       Tone.Transport.stop();
       Tone.Transport.cancel();
-      play_flg = 0;
     }
   })
 });
