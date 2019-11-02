@@ -74,6 +74,10 @@ h2{
     line-height: 200px;
     margin: 10px 0;
     cursor: pointer;
+  
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
 }
 .artists_item:hover{
     opacity: 0.8;
@@ -81,12 +85,7 @@ h2{
 .artists_is-select{
     background-color: aquamarine;
 }
-.artists_item p{
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-}
+
 .start_next-btn{
     width: 200px;
     height: 75px;
