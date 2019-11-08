@@ -58,6 +58,14 @@ $('#play').click(function() {
   }
 });
 
+/*作曲情報バー*/
+var artist = "THEE MICHELLE GUN ELEPHANT";
+var key = "C";
+
+$('.artist').html(artist);
+$('.key').html(key);
+
+
 //BPM
 $('.bpm_value').html(bpm);
 $('.bpm_slider').on('input change', function() {
