@@ -142,12 +142,21 @@ jQuery(function($){
       if(chord_stroke.A[x].note.length > 0 && chord_stroke.A[x].note[0] != ""){
         chord_stroke.A[x].note = [47, 43, 40];
       }
-      /*if(chord_stroke.B[x].note.length > 0 && chord_stroke.B[x].note[0] != ""){
+    }
+    for(var x=0; x<chord_stroke.B.length; x++){
+      if(chord_stroke.B[x].note.length > 0 && chord_stroke.B[x].note[0] != ""){
         chord_stroke.B[x].note = [47, 43, 40];
       }
+    }
+    for(var x=0; x<chord_stroke.C.length; x++){
       if(chord_stroke.C[x].note.length > 0 && chord_stroke.C[x].note[0] != ""){
         chord_stroke.C[x].note = [47, 43, 40];
-      }*/
+      }
+    }
+    for(var x=0; x<chord_stroke.D.length; x++){
+      if(chord_stroke.D[x].note.length > 0 && chord_stroke.D[x].note[0] != ""){
+        chord_stroke.D[x].note = [47, 43, 40];
+      }
     }
     console.log(chord_stroke);
   }
@@ -166,7 +175,7 @@ jQuery(function($){
   }
   
   function Drum_gene(){
-    for(var x=0; x<notes_measure; x++){ //本来はx<notes_measure
+    for(var x=0; x<drum_pattern[rythem_pattern].length; x++){ 
       if(drum_pattern[rythem_pattern][x][1].length > 0 && drum_pattern[rythem_pattern][x][1][0] != ""){
         MIDI_drum.push(drum_pattern[rythem_pattern][x]);
       }
@@ -191,6 +200,7 @@ jQuery(function($){
         $('.beat_play-btn').css('display','none');
         $('.beat_stop-btn').css('display','block');
         //再生の処理
+        polysynth_chord.triggerAttackRelease("", '16n'); //Chrome用の処理
         MIDI_gene(default_chord, rythem_pattern);
         Tone.Transport.bpm.value = bpm;
         var Chord = new Tone.Part(addChord, MIDI_chord).start();
@@ -236,6 +246,7 @@ jQuery(function($){
       $('.demo_play-btn').css('display','none');
       $('.demo_stop-btn').css('display','block');
       //再生の処理
+      polysynth_chord.triggerAttackRelease("", '16n'); //Chrome用の処理
       var Chord = new Tone.Part(addChord, MIDI_chord).start();
       var Bass = new Tone.Part(addBass, MIDI_bass).start();
       var Drum = new Tone.Part(addDrum, drum_pattern[rythem_pattern]).start();

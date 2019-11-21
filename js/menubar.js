@@ -72,3 +72,4 @@ $('.bpm_slider').on('input change', function() {
   bpm = $(this).val();
   $('.bpm_value').html(bpm);
 });
+

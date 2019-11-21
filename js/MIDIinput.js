@@ -90,6 +90,7 @@ jQuery(function($){
   var isMouseDown = false; //マウスを押下しているか
   var isShiftDown = false; //シフトキーをマウス押下時に押下していたか
   var polysynth_melody = new Tone.PolySynth().toMaster(); //Melody用
+  polysynth_melody.pan = 1000;
   var polysynth_chord = new Tone.PolySynth().toMaster(); //Chord用
   var plucksynth = new Tone.PluckSynth().toMaster(); //Bass用
   /*Samplerについての注意事項
@@ -598,8 +599,68 @@ jQuery(function($){
   }
   //console.log(MIDI_bass);
   
+  //ボリューム・ミュート・パン
+  //ミュート
+  $(".mute").eq(0).on("click", function(){
+    if($(this).hasClass("active")){
+      polysynth_melody.volume.value = -Infinity;
+    }else{
+      polysynth_melody.volume.value = 0;
+    }
+  });
+  $(".mute").eq(1).on("click", function(){
+    if($(this).hasClass("active")){
+      polysynth_chord.volume.value = -Infinity;
+    }else{
+      polysynth_chord.volume.value = 0;
+    }
+  });
+  $(".mute").eq(2).on("click", function(){
+    if($(this).hasClass("active")){
+      plucksynth.volume.value = -Infinity;
+    }else{
+      plucksynth.volume.value = 0;
+    }
+  });
+  $(".mute").eq(3).on("click", function(){
+    if($(this).hasClass("active")){
+      Drum_sampler.volume.value = -Infinity;
+    }else{
+      Drum_sampler.volume.value = 0;
+    }
+  });
+  
   
   //再生処理
+  var Seekbar_position = 0;
+  function seekbar_move(){
+    if(Seekbar_position > notes_measure){
+      Seekbar_position = 0;
+      $(".Seekbar").remove();
+      $(".MIDI_notes").eq(Seekbar_position).after("<div class=\"Seekbar\">");
+    }else{
+      $(".Seekbar").remove();
+      $(".MIDI_notes").eq(Seekbar_position).after("<div class=\"Seekbar\">");
+      Seekbar_position++;
+    }
+  }
+  var Measure_position = "0:0:0";
+  function Measure_calc(num){
+    var a = Math.floor(num / 16);
+    var b = Math.floor(num / 4) % 4;
+    var c = num % 4;
+    if(a > 7){
+      Measure_position = "0:0:0";
+    }else{
+      Measure_position = (a+":"+b+":"+c);
+    }
+  }
+  $("#backward").on("click", function(){
+    Seekbar_position = 0;
+    $(".Seekbar").remove();
+    $(".MIDI_notes").eq(Seekbar_position).before("<div class=\"Seekbar\">");
+    Measure_position = "0:0:0";
+  });
   $("#play").click(function(){
     Tone.Transport.bpm.value = bpm; //bpm
     if(play_flg == 0){
@@ -613,21 +674,21 @@ jQuery(function($){
           play_MIDI_Drum.push(drum_pattern[rythem_pattern][z]);
         }
       }
-      if(mute_flg[0] == 0){
-        var Melody = new Tone.Part(addMelody, play_MIDI_Melody).start();
-      }
-      if(mute_flg[1] == 0){
-        var Chord = new Tone.Part(addChord, MIDI_chord).start();
-      }
-      if(mute_flg[2] == 0){
-        var Bass = new Tone.Part(addBass, MIDI_bass).start();
-      }
-      if(mute_flg[3] == 0){
-        var Drum = new Tone.Part(addDrum, play_MIDI_Drum).start();
-      }
+      var Melody = new Tone.Part(addMelody, play_MIDI_Melody).start();
+      var Chord = new Tone.Part(addChord, MIDI_chord).start();
+      var Bass = new Tone.Part(addBass, MIDI_bass).start();
+      var Drum = new Tone.Part(addDrum, play_MIDI_Drum).start();
+      
+      Tone.Transport.seconds = Measure_position; //再生位置
+      Tone.Transport.scheduleRepeat(function(){ //シークバー
+        seekbar_move();
+        //console.log($('.Seekbar').offset().left);
+        //$(".note_grid").scrollLeft($('.MIDI_notes').eq(Seekbar_position).offset().left);
+      }, "16n");
       Tone.Transport.start();
       play_flg = 1;
     }else{
+      Measure_calc(Seekbar_position);
       Tone.Transport.stop();
       Tone.Transport.cancel();
       play_flg = 0;
