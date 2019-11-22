@@ -683,7 +683,7 @@ jQuery(function($){
       Tone.Transport.scheduleRepeat(function(){ //シークバー
         seekbar_move();
         //console.log($('.Seekbar').offset().left);
-        //$(".note_grid").scrollLeft($('.MIDI_notes').eq(Seekbar_position).offset().left);
+        $(".note_grid").scrollLeft($('.MIDI_notes').eq(Seekbar_position).offset().left);
       }, "16n");
       Tone.Transport.start();
       play_flg = 1;

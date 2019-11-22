@@ -12,7 +12,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!--グローバル変数-->
     <script type="text/javascript">
-      var mute_flg = [0, 0, 0, 0];
       var play_flg = 0;
       var bpm = 120;
       
@@ -39,16 +38,17 @@
         <div class="help-button">
           <p id="help"><i class="far fa-question-circle fa-fw"></i></p>
         </div>
+        <div class="back-button">
+          <a href="create.html"><p id="back"><i class="fas fa-directions"></i></p></a>
+        </div>
 
         <!--真ん中-->
         <div class="saisei">
           <p id ="backward"><i class="fas fa-fast-backward"></i></p>
-          <p id ="forward"><i class="fas fa-fast-forward"></i></p>
           <p id ="play">
             <span class="play-btn"><i class="fas fa-play"></i></span>
             <span class="stop-btn"><i class="far fa-square"></i></span>
           </p>
-          <p id ="undo"><i class="fas fa-undo"></i></p>
         </div>
 
         <!--右-->
