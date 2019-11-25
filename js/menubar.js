@@ -47,6 +47,14 @@ $('#help').click(function() {
   }
 });
 
+$("#back").click(function(){
+  if(confirm('保存していない内容は破棄されますが、本当にプロジェクト選択画面に戻りますか。')){
+    location.href = "create.html";
+  }else{
+    return false;
+  }
+});
+
 /*再生ボタンと停止ボタン*/
 $('#play').click(function() {
   if(play_flg == 0){

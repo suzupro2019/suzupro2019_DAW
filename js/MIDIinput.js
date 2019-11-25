@@ -600,35 +600,72 @@ jQuery(function($){
   //console.log(MIDI_bass);
   
   //ボリューム・ミュート・パン
+  //ボリューム
+  var melodyvol = 0;
+  polysynth_melody.volume.value = melodyvol; //音量の値を初期値に代入
+  $('.volume').eq(0).html(melodyvol);
+  $('.volume').eq(0).on('input change', function() {
+    melodyvol = $(this).val();
+    $('.volume').eq(0).html(melodyvol);
+    polysynth_melody.volume.value = melodyvol;
+  });
+  var chordvol = 0;
+  polysynth_chord.volume.value = chordvol;
+  $('.volume').eq(1).html(chordvol);
+  $('.volume').eq(1).on('input change', function() {
+    chordvol = $(this).val();
+    $('.volume').eq(1).html(chordvol);
+    polysynth_chord.volume.value = chordvol;
+  });
+  var bassvol = 0;
+  plucksynth.volume.value = bassvol;
+  $('.volume').eq(2).html(bassvol);
+  $('.volume').eq(2).on('input change', function() {
+    bassvol = $(this).val();
+    $('.volume').eq(2).html(bassvol);
+    plucksynth.volume.value = bassvol;
+  });
+  var drumvol = 0;
+  Drum_sampler.volume.value = drumvol;
+  $('.volume').eq(3).html(drumvol);
+  $('.volume').eq(3).on('input change', function() {
+    drumvol = $(this).val();
+    $('.volume').eq(3).html(drumvol);
+    Drum_sampler.volume.value = drumvol;
+  });
+  
   //ミュート
   $(".mute").eq(0).on("click", function(){
     if($(this).hasClass("active")){
       polysynth_melody.volume.value = -Infinity;
     }else{
-      polysynth_melody.volume.value = 0;
+      polysynth_melody.volume.value = melodyvol;
     }
   });
   $(".mute").eq(1).on("click", function(){
     if($(this).hasClass("active")){
       polysynth_chord.volume.value = -Infinity;
     }else{
-      polysynth_chord.volume.value = 0;
+      polysynth_chord.volume.value = chordvol;
     }
   });
   $(".mute").eq(2).on("click", function(){
     if($(this).hasClass("active")){
       plucksynth.volume.value = -Infinity;
     }else{
-      plucksynth.volume.value = 0;
+      plucksynth.volume.value = bassvol;
     }
   });
   $(".mute").eq(3).on("click", function(){
     if($(this).hasClass("active")){
       Drum_sampler.volume.value = -Infinity;
     }else{
-      Drum_sampler.volume.value = 0;
+      Drum_sampler.volume.value = drumvol;
     }
   });
+  
+  //パン
+  
   
   
   //再生処理
@@ -655,11 +692,22 @@ jQuery(function($){
       Measure_position = (a+":"+b+":"+c);
     }
   }
-  $("#backward").on("click", function(){
+  $(".exbar .gr").html(Measure_position);
+  $(".extime .gr").html("00:00");
+  
+  $("#backward").on("click", function(){ //シークバーを初期位置に戻すよ
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    play_flg = 0;
+    $('.play-btn').show();
+    $('.stop-btn').hide();
     Seekbar_position = 0;
     $(".Seekbar").remove();
     $(".MIDI_notes").eq(Seekbar_position).before("<div class=\"Seekbar\">");
     Measure_position = "0:0:0";
+    $(".exbar .gr").html(Measure_position);
+    $(".extime .gr").html("00:00");
+    $(".note_grid").scrollLeft(0);
   });
   $("#play").click(function(){
     Tone.Transport.bpm.value = bpm; //bpm
@@ -682,13 +730,22 @@ jQuery(function($){
       Tone.Transport.seconds = Measure_position; //再生位置
       Tone.Transport.scheduleRepeat(function(){ //シークバー
         seekbar_move();
+        Measure_calc(Seekbar_position);
+        $(".exbar .gr").html(Measure_position);
+        if(Tone.Transport.getSecondsAtTime()%60 > 10){
+          var Seekbar_time = "0"+Math.floor(Tone.Transport.getSecondsAtTime()/60)+":"+Math.floor(Tone.Transport.getSecondsAtTime()%60);
+        }else{
+          var Seekbar_time = "0"+Math.floor(Tone.Transport.getSecondsAtTime()/60)+":"+"0"+Math.floor(Tone.Transport.getSecondsAtTime()%60);
+        }
+        $(".extime .gr").html(Seekbar_time);
         //console.log($('.Seekbar').offset().left);
-        $(".note_grid").scrollLeft($('.MIDI_notes').eq(Seekbar_position).offset().left);
+        //$(".note_grid").scrollLeft($('.MIDI_notes').eq(Seekbar_position).offset().left);
       }, "16n");
-      Tone.Transport.start();
+      Tone.Transport.loop = true;
+      Tone.Transport.loopEnd = "7:3:3";
+      Tone.Transport.start(console.log("FA"));
       play_flg = 1;
     }else{
-      Measure_calc(Seekbar_position);
       Tone.Transport.stop();
       Tone.Transport.cancel();
       play_flg = 0;

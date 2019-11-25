@@ -51,4 +51,12 @@ jQuery(function($){
       rythem_pattern = $(".beats_is-select").html();
       select_flg[2] = 1;
     });
+  
+  $(".start_over").click(function(){
+    if(confirm('保存していない内容は破棄されますが、本当にプロジェクト選択画面に戻りますか。')){
+      location.href = "create.html";
+    }else{
+      return false;
+    }
+  });
 });

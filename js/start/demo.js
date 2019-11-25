@@ -31,8 +31,6 @@ Mscale_Do.reverse(); //逆から表示するために反転している
 Mscale_C.reverse(); //同上
 
 jQuery(function($){
-  //コード進行の出力
-  $(".gene_chords").append(generated_chord);
   //音源の定義
   var polysynth_chord = new Tone.PolySynth().toMaster(); //Chord用
   var plucksynth = new Tone.PluckSynth().toMaster(); //Bass用
@@ -223,6 +221,8 @@ jQuery(function($){
       console.log(artist);
       console.log(key);
       console.log(rythem_pattern);
+      //ここに初回のみコード生成処理
+      $(".gene_chords").html(generated_chord);
       MIDI_gene(generated_chord, "A");
     }
   });
@@ -231,6 +231,8 @@ jQuery(function($){
       console.log(artist);
       console.log(key);
       console.log(rythem_pattern);
+      //ここに初回のみコード生成処理
+      $(".gene_chords").html(generated_chord);
       MIDI_gene(generated_chord, "A");
     }
   });
@@ -239,7 +241,18 @@ jQuery(function($){
   $('.bpm_number').on('input change', function() {
     bpm = $(this).val();
   });
-
+  
+  $(".regeneration_btn").on("click", function(){ //コード再生成btn
+    if(confirm('本当にコード進行の再生成を行いますか。')){
+      //コードを再生成する (Django+Chainer)
+      generated_chord = "AbM7 Bb7 Fm7 GbM7";
+      $(".gene_chords").html(generated_chord);
+      MIDI_gene(generated_chord, "A");
+    }else{
+      return false;
+    }
+  });
+  
   $('.demo_play').on("click", function() {
     Tone.Transport.bpm.value = bpm;
     if($(".demo_play-btn").css("display") == "block"){
