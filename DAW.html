@@ -13,6 +13,7 @@
     <!--グローバル変数-->
     <script type="text/javascript">
       var play_flg = 0;
+      var help_flg = false;
       var bpm = 120;
       
       var chord_stroke = {};
@@ -22,6 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script type="text/javascript" src="./js/instbar.js"></script>
     <script src="./js/input-knobs.js"></script>
+    <script src="js/DAW_help.js"></script>
     <!--以下MIDIinput-->
     <script src="js/rythem_pattern.js"></script>
     <script type="text/javascript" src="./js/MIDIinput.js"></script>
@@ -31,15 +33,17 @@
     <div class="main">
       <div class="menu_bar">
         <!--左-->
-        <div class="save-button">
+        <div class="save-button trigger">
           <p id="save"><i class="far fa-save fa-fw"></i></p>
+          <div class="save_callout callout"><p class="callout_text">テキスト1</p></div>
         </div>
 
-        <div class="help-button">
+        <div class="help-button trigger">
           <p id="help"><i class="far fa-question-circle fa-fw"></i></p>
+          <div class="help_callout callout"><p class="callout_text">テキスト2</p></div>
         </div>
         <div class="back-button">
-          <p id="back"><i class="fas fa-directions"></i></p>
+          <p id="back"><i class="fas fa-directions fa-fw"></i></p>
         </div>
 
         <!--真ん中-->
@@ -104,7 +108,7 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan" autocomplete="off">
+                    <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
                     <p>R</p>
                 </div>
                 <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
@@ -133,7 +137,7 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan" autocomplete="off">
+                    <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
                     <p>R</p>
                 </div>
                 <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
@@ -162,7 +166,7 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan" autocomplete="off">
+                    <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
                     <p>R</p>
                 </div>
                 <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
@@ -191,7 +195,7 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan" autocomplete="off">
+                    <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
                     <p>R</p>
                 </div>
                 <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">

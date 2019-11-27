@@ -11,6 +11,12 @@ body {
 .main{
   position: relative;
 }
+h2{
+  margin: 10px;
+}
+p{
+  margin: 10px;
+}
 a {
     text-decoration: none;
     color: #333;
@@ -91,7 +97,7 @@ h2{
     display: flex;
     justify-content: center;
     width: 500px;
-    margin: 0 auto;
+    margin: 10px auto;
     cursor: pointer;
 }
 .Progress_number {
@@ -241,7 +247,6 @@ h2{
 .gene_chords{
   font-size: 20px;
   text-align: center;
-  margin-bottom: 40px;
 }
 .regeneration_btn{
   width: 250px;
@@ -251,7 +256,7 @@ h2{
   border-radius: 15px;
   text-align: center;
   line-height: 70px;
-  margin: 0 auto;
+  margin: 10px auto 30px auto;
   cursor: pointer;
 }
 .regeneration_btn:hover{
