@@ -7,15 +7,15 @@
      * ベースカラー設定
      */
     body {
-    margin: 0;
-    background-color: #aaa;
-    margin-bottom: 30px;
+      margin: 0;
+      background-color: #aaa;
+      margin-bottom: 30px;
     }
     h1{
-    background-color: #ccc;
-    font-size: 32px;
-    text-align: center;
-    padding: 0.8em 0;
+      background-color: #ccc;
+      font-size: 32px;
+      text-align: center;
+      padding: 0.8em 0;
     }
     
     html {

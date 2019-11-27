@@ -223,7 +223,7 @@ jQuery(function($){
       console.log(rythem_pattern);
       //ここに初回のみコード生成処理
       $(".gene_chords").html(generated_chord);
-      MIDI_gene(generated_chord, "A");
+      MIDI_gene(generated_chord, rythem_pattern);
     }
   });
   $(".Progress_number").click(function(){
@@ -233,7 +233,7 @@ jQuery(function($){
       console.log(rythem_pattern);
       //ここに初回のみコード生成処理
       $(".gene_chords").html(generated_chord);
-      MIDI_gene(generated_chord, "A");
+      MIDI_gene(generated_chord, rythem_pattern);
     }
   });
   
@@ -247,7 +247,7 @@ jQuery(function($){
       //コードを再生成する (Django+Chainer)
       generated_chord = "AbM7 Bb7 Fm7 GbM7";
       $(".gene_chords").html(generated_chord);
-      MIDI_gene(generated_chord, "A");
+      MIDI_gene(generated_chord, rythem_pattern);
     }else{
       return false;
     }
