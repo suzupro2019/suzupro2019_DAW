@@ -10,6 +10,7 @@ body {
 }
 .main{
   position: relative;
+  height: 100%;
 }
 h2{
   margin: 10px;
@@ -32,24 +33,6 @@ h1 {
 h2{ 
     font-size: 24px;
     text-align: center;
-}
-
-.l-wrapper{
-  position: absolute;
-  display: block;
-  top: 80%;
-  left: 50%;
-  transform : translate(-50%, -50%);
-  z-index: 100;
-  padding-bottom: 0;
-}
-.tutorial_close-btn{
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 101;
 }
 
 .Top_title{
