@@ -122,3 +122,33 @@
       .u-d-i-xl { display: inline !important; }
       .u-d-b-xl { display: block !important; }
     }
+
+/*チュートリアル*/
+.l-wrapper{
+  position: absolute;
+  display: block;
+  top: 50%;
+  left: 50%;
+  transform : translate(-50%, -50%);
+  z-index: 100;
+  padding-bottom: 0;
+}
+.tutorial_close-btn{
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 101;
+}
+.sample {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+@media (min-width: 768px) {
+  .sample {
+    padding: 20px;
+  }
+}

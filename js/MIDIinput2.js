@@ -29,7 +29,7 @@ jQuery(function($){
   //音階
   for(var i = 0; i < MIDI_Mscale; i++){
     var Mscale_index = Math.ceil((MIDI_Mscale-i) / 12); //国際式はi-12 ヤマハ式はi-24
-    $(".Mscale_grid").append("<div class=\"Mscale_notes\"><p>" + Mscale_Do[i%12] + Mscale_index);
+    $(".Mscale_grid").append("<div class=\"Mscale_notes\"><p>" + Mscale_C[i%12] + Mscale_index);
   }
   //入力部分
   for(var j = 0; j < notes_measure; j++){
@@ -351,7 +351,7 @@ jQuery(function($){
       }
       $(this).toggleClass("highlighted");
     //長音を入れることができる条件：シフトキー かつ 短音が入ってない かつ 長音が入ってない かつ 同じ列に長音の始点がない
-    }/*else if(isShiftDown == true && $(this).hasClass("highlighted") == false && $(this).hasClass("ml_highlighted") == false && MIDI_Melody[$(this).parent().index()].duration == "16n"){
+    }else if(isShiftDown == true && $(this).hasClass("highlighted") == false && $(this).hasClass("ml_highlighted") == false && MIDI_Melody[$(this).parent().index()].duration == "16n"){
       //長音の処理
       ml_column = note_position % MIDI_Mscale;
       if($(this).hasClass('ml_highlighted') == false){
@@ -381,7 +381,7 @@ jQuery(function($){
         var now_note = ml_column + (y * MIDI_Mscale);
         $(".notes").eq(now_note).removeClass("ml_highlighted");
       }
-    }*/
+    }
     return false; // prevent text selection
   })
   .mouseover(function() {
@@ -410,14 +410,14 @@ jQuery(function($){
           console.log(MIDI_Melody);
         }
         $(this).toggleClass("highlighted");
-      }/*else if(isShiftDown == true && $(this).hasClass("highlighted") == false && remove_flg == 0){
+      }else if(isShiftDown == true && $(this).hasClass("highlighted") == false && remove_flg == 0){
         //長音の処理
         ml_line = $(this).parent().index();
         if(ml_line > first_line+line_count){
           $(".notes").eq(MIDI_Mscale*ml_line+ml_column).addClass("ml_highlighted");
           line_count += 1;
         }
-      }*/
+      }
     }
   })
   .bind("selectstart", function () {
@@ -425,7 +425,7 @@ jQuery(function($){
   });
   $(document).mouseup(function() {
     isMouseDown = false;
-    /*if(line_count > 0){ //長音の処理
+    if(line_count > 0){ //長音の処理
       var note_name = ml_column % 12;
       var pitch =  Math.ceil((MIDI_Mscale-ml_column) / 12);
       var MIDI_note = Mscale_C[note_name] + pitch;
@@ -439,7 +439,7 @@ jQuery(function($){
     //長音にならなかった場合 >> 削除  
     }else if(isShiftDown && MIDI_Melody[ml_line].duration == "16n"){
       $(".notes").eq(note_position).removeClass("ml_highlighted");
-    }*/
+    }
     //変数の初期化
     remove_flg = 0;
     ml_line = 0;
