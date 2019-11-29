@@ -65,6 +65,17 @@ jQuery(function($){
       $(".note_grid").scrollTop()
     );
   });
+  
+  $(".Measure_grid").scroll(function(){
+    $(".note_grid").scrollLeft(
+      $(".Measure_grid").scrollLeft()
+    );
+  });
+  $(".Mscale_grid").scroll(function(){
+    $(".note_grid").scrollTop(
+      $(".Mscale_grid").scrollTop()
+    );
+  });
 
   //notes縦横可変
   var measure_width = 800; //measureの最低幅 ページ読み込み時の初期サイズは1600px
