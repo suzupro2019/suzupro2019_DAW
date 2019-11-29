@@ -725,10 +725,10 @@ jQuery(function($){
   $(".exbar .gr").html(Measure_position);
   $(".extime .gr").html("00:00");
   
-  $("#backward").on("click", function(){ //シークバーを初期位置に戻すよ
+  function music_back(){
     Tone.Transport.stop();
     Tone.Transport.cancel();
-    play_flg = 0;
+    play_flg = false;
     $('.play-btn').show();
     $('.stop-btn').hide();
     Seekbar_position = 0;
@@ -738,10 +738,14 @@ jQuery(function($){
     $(".exbar .gr").html(Measure_position);
     $(".extime .gr").html("00:00");
     $(".note_grid").scrollLeft(0);
+  }
+  $("#backward").on("click", function(){ //シークバーを初期位置に戻すよ
+    music_back();
   });
-  $("#play").click(function(){
+  
+  function music_play(){
     Tone.Transport.bpm.value = bpm; //bpm
-    if(play_flg == 0){
+    if(play_flg == false){
       var play_MIDI_Melody = []; //再生用に無駄な情報を省いたもの
       var play_MIDI_Drum =[];
       for(z=0; z<drum_pattern[Rythem_pattern].length; z++){ //本来はz<notes_measure
@@ -774,11 +778,30 @@ jQuery(function($){
       Tone.Transport.loop = true;
       Tone.Transport.loopEnd = "7:3:3";
       Tone.Transport.start();
-      play_flg = 1;
     }else{
       Tone.Transport.stop();
       Tone.Transport.cancel();
-      play_flg = 0;
+    }
+  }
+  
+  $("#play").click(function(){
+    music_play();
+  });
+  
+  
+  /*ショートカット*/
+  $(document).on("keydown", function(e){ 
+    if(e.keyCode == 32){ //スペースキーで再生・停止
+      if(e.preventDefault){
+        e.preventDefault();
+      }
+      music_play();
+    }
+    if(e.keyCode == 13){ //enterで再生位置を初期位置に戻す
+      if(e.preventDefault){
+        e.preventDefault();
+      }
+      music_back();
     }
   })
 });
