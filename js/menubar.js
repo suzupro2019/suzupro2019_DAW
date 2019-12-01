@@ -103,7 +103,6 @@ $(function() { //Enterを押しても送信されないようにする。
         $(".l-wrapper").hide();
       }
     }
-
     //Enterで再生位置を初期位置に戻す >> MIDIinput.jsに記載
     if(e.keyCode == 32){ //スペースキーで再生・停止
       if(e.preventDefault){

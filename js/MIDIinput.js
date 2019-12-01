@@ -363,14 +363,20 @@ jQuery(function($){
   var line_count = 0; //現在ml_highlitedにした列数
   var remove_flg = 0; //消す処理をしているか否か
   
+  //リドゥ・アンドゥ用配列 (計5つまで)
+  var Melody_log = []; //初期状態では起動後の状態を保存したログが一つ入っている
+  var Undo_idx = -1;
+  
   $(".notes").mousedown(function(event) {
     isMouseDown = true;
+    if(Melody_log.length != Undo_idx+2){ //Undo_idxは常にMelody_logの最後尾-1に位置する
+      Melody_log.splice(Undo_idx+2, Melody_log.length-Undo_idx+2);
+    }
     
     note_position = $('.notes').index(this); //ノートの全体からの位置
     var note_name = note_position % 7;
     var pitch =  Math.ceil((MIDI_Mscale-note_position%MIDI_Mscale) / 7);
     var MIDI_note = Scales[Key][note_name] + pitch;
-    console.log(MIDI_note);
     var measure_count = $(this).parent().index();
     if($(this).hasClass('highlighted') == false){
       polysynth_melody.triggerAttackRelease(MIDI_note, '16n');
@@ -424,7 +430,21 @@ jQuery(function($){
   .bind("selectstart", function () {
     return false; // prevent text selection in IE
   });
+  
   $(document).mouseup(function() {
+    if(isMouseDown){ //リドゥ・アンドゥ用のLog
+      if(Melody_log.length < 100){
+        Melody_cup = JSON.parse(JSON.stringify(MIDI_Melody));
+        Melody_log.push(Melody_cup);
+      }else{
+        Melody_log.shift();
+        Melody_cup = JSON.parse(JSON.stringify(MIDI_Melody));
+        Melody_log.push(Melody_cup);
+      }
+      if(Undo_idx < 98){
+        Undo_idx++;
+      }
+    }
     isMouseDown = false;
     /*if(line_count > 0){ //長音の処理
       var note_name = ml_column % 12;
@@ -581,20 +601,20 @@ jQuery(function($){
     {"time":"7:3:3", "note":[], "duration":"16n"}
   ];
   
-  function Melody_display(){
-    for(y=0; y<test_Melody.length; y++){
-      if(test_Melody[y].note.length > 0 && test_Melody[y].note[0] != ""){
-        for(z=0; z<test_Melody[y].note.length; z++){
+  function Melody_display(Mel){
+    for(y=0; y<Mel.length; y++){
+      if(Mel[y].note.length > 0 && Mel[y].note[0] != ""){
+        for(z=0; z<Mel[y].note.length; z++){
           if(MIDI_Melody[y].note == ""){ //音情報
-            MIDI_Melody[y].note.splice(0, 1, test_Melody[y].note[0]);
+            MIDI_Melody[y].note.splice(0, 1, Mel[y].note[0]);
           }else{
-            MIDI_Melody[y].note.push(test_Melody[y].note[z]);
+            MIDI_Melody[y].note.push(Mel[y].note[z]);
           }
-          var pitch = test_Melody[y].note[z].slice(-1);
-          if(test_Melody[y].note[z].length == 3){ //C#3
-            var note_name = test_Melody[y].note[z].slice(0, 2);
+          var pitch = Mel[y].note[z].slice(-1);
+          if(Mel[y].note[z].length == 3){ //C#3
+            var note_name = Mel[y].note[z].slice(0, 2);
           }else{
-            var note_name = test_Melody[y].note[z].slice(0, 1);
+            var note_name = Mel[y].note[z].slice(0, 1);
           }
           $(".notes").eq( //highlighted
             Scales[Key].indexOf(note_name) + (6-pitch)*7 + y*MIDI_Mscale
@@ -605,7 +625,7 @@ jQuery(function($){
     console.log("保存データ読み込み")
     console.log(MIDI_Melody);
   };
-  //Melody_display();
+  Melody_display(test_Melody);
   
   
   //コード(文字列からの生成)
@@ -700,7 +720,7 @@ jQuery(function($){
   
   //再生処理
   var Seekbar_position = 0;
-  function seekbar_move(){
+  function Seekbar_move(){
     if(Seekbar_position > notes_measure){
       Seekbar_position = 0;
       $(".Seekbar").remove();
@@ -710,6 +730,11 @@ jQuery(function($){
       $(".MIDI_notes").eq(Seekbar_position).after("<div class=\"Seekbar\">");
       Seekbar_position++;
     }
+  }
+  function Seekbar_back(){
+    Seekbar_position--;
+    $(".Seekbar").remove();
+    $(".MIDI_notes").eq(Seekbar_position).after("<div class=\"Seekbar\">");
   }
   var Measure_position = "0:0:0";
   function Measure_calc(num){
@@ -721,6 +746,7 @@ jQuery(function($){
     }else{
       Measure_position = (a+":"+b+":"+c);
     }
+    $(".exbar .gr").html(Measure_position);
   }
   $(".exbar .gr").html(Measure_position);
   $(".extime .gr").html("00:00");
@@ -763,9 +789,8 @@ jQuery(function($){
       
       Tone.Transport.seconds = Measure_position; //再生位置
       Tone.Transport.scheduleRepeat(function(){ //シークバー
-        seekbar_move();
+        Seekbar_move();
         Measure_calc(Seekbar_position);
-        $(".exbar .gr").html(Measure_position);
         if(Tone.Transport.getSecondsAtTime()%60 > 10){
           var Seekbar_time = "0"+Math.floor(Tone.Transport.getSecondsAtTime()/60)+":"+Math.floor(Tone.Transport.getSecondsAtTime()%60);
         }else{
@@ -773,10 +798,11 @@ jQuery(function($){
         }
         $(".extime .gr").html(Seekbar_time);
         //console.log($('.Seekbar').offset().left);
+        //console.log($('.note_grid').offset().left);
         //$(".note_grid").scrollLeft($('.MIDI_notes').eq(Seekbar_position).offset().left);
       }, "16n");
       Tone.Transport.loop = true;
-      Tone.Transport.loopEnd = "7:3:3";
+      Tone.Transport.loopEnd = "8:0:0";
       Tone.Transport.start();
     }else{
       Tone.Transport.stop();
@@ -788,20 +814,70 @@ jQuery(function($){
     music_play();
   });
   
-  
   /*ショートカット*/
   $(document).on("keydown", function(e){ 
-    if(e.keyCode == 32){ //スペースキーで再生・停止
+    if(e.keyCode == 32){ //space 再生・停止
       if(e.preventDefault){
         e.preventDefault();
       }
       music_play();
     }
-    if(e.keyCode == 13){ //enterで再生位置を初期位置に戻す
+    if(e.keyCode == 13){ //enter 再生位置を初期位置に戻す
       if(e.preventDefault){
         e.preventDefault();
       }
       music_back();
     }
+    if(e.keyCode == 37){ //← 再生位置を戻す
+      if(e.preventDefault){
+        e.preventDefault();
+      }
+      console.log("←")
+      /*if(Seekbar_position > 0){
+        Seekbar_back();
+        Measure_calc(Seekbar_position);
+      }*/
+    }
+    if(e.keyCode == 39){ //→ 再生位置を進める
+      if(e.preventDefault){
+        e.preventDefault();
+      }
+      console.log("→")
+    }
+    if(e.metaKey && e.keyCode == 90 && Undo_idx >= 0){ //cmd + z アンドゥ
+      if(e.preventDefault){
+        e.preventDefault();
+      }
+      Undo_Melody();
+    }
   })
+  
+  
+  function Undo_Melody(){
+    $(".notes").removeClass("highlighted");
+    
+    Melody_cup = JSON.parse(JSON.stringify(Melody_log[Undo_idx]));
+    MIDI_Melody = Melody_cup;
+    
+    for(y=0; y<MIDI_Melody.length; y++){
+      if(MIDI_Melody[y].note.length > 0 && MIDI_Melody[y].note[0] != ""){
+        for(z=0; z<MIDI_Melody[y].note.length; z++){
+          var pitch = MIDI_Melody[y].note[z].slice(-1);
+          if(MIDI_Melody[y].note[z].length == 3){ //C#3
+            var note_name = MIDI_Melody[y].note[z].slice(0, 2);
+          }else{
+            var note_name = MIDI_Melody[y].note[z].slice(0, 1);
+          }
+          $(".notes").eq( //highlighted
+            Scales[Key].indexOf(note_name) + (6-pitch)*7 + y*MIDI_Mscale
+          ).addClass("highlighted");
+        }
+      }
+    }
+    Undo_idx--;
+  }
+  
+  //起動後の初期状態をMelody_logに入れておく
+  Melody_cup = JSON.parse(JSON.stringify(MIDI_Melody));
+  Melody_log.push(Melody_cup);
 });
