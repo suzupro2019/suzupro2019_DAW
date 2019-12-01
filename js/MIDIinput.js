@@ -844,6 +844,12 @@ jQuery(function($){
       }
       console.log("→")
     }
+    if(e.metaKey && e.keyCode == 89 && Undo_idx+2 < Melody_log.length){ //cmd + y リドゥ
+      if(e.preventDefault){
+        e.preventDefault();
+      }
+      Redo_Melody();
+    }
     if(e.metaKey && e.keyCode == 90 && Undo_idx >= 0){ //cmd + z アンドゥ
       if(e.preventDefault){
         e.preventDefault();
@@ -853,6 +859,29 @@ jQuery(function($){
   })
   
   
+  function Redo_Melody(){
+    $(".notes").removeClass("highlighted");
+    
+    Melody_cup = JSON.parse(JSON.stringify(Melody_log[Undo_idx+2]));
+    MIDI_Melody = Melody_cup;
+    
+    for(y=0; y<MIDI_Melody.length; y++){
+      if(MIDI_Melody[y].note.length > 0 && MIDI_Melody[y].note[0] != ""){
+        for(z=0; z<MIDI_Melody[y].note.length; z++){
+          var pitch = MIDI_Melody[y].note[z].slice(-1);
+          if(MIDI_Melody[y].note[z].length == 3){ //C#3
+            var note_name = MIDI_Melody[y].note[z].slice(0, 2);
+          }else{
+            var note_name = MIDI_Melody[y].note[z].slice(0, 1);
+          }
+          $(".notes").eq( //highlighted
+            Scales[Key].indexOf(note_name) + (6-pitch)*7 + y*MIDI_Mscale
+          ).addClass("highlighted");
+        }
+      }
+    }
+    Undo_idx++;
+  }
   function Undo_Melody(){
     $(".notes").removeClass("highlighted");
     
