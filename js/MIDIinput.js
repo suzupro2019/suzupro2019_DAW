@@ -181,6 +181,7 @@ jQuery(function($){
   //ロード処理
   for(var x=0; x<Instruments.length; x++){
     Instruments[x].volume.value = volume[x];
+    $('.volume').eq(x).val(volume[x]);
   }
   
   //クリック時の処理
