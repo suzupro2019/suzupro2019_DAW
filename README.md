@@ -5,7 +5,7 @@ Deeparture
 ショートカットについて  
 ===start.html===  
 * space：3タブ、4タブで再生停止
-* Esc：チュートリアル・非表示
+* esc：チュートリアル・非表示
 
 ===DAW.html===  
 * cmd + s：保存ウィンドウ表示

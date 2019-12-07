@@ -93,6 +93,7 @@ td.extime{
   color: #59DE64;
   white-space: nowrap;
   -ms-overflow-style:none;
+  scrollbar-width: none;
 }
 .gr::-webkit-scrollbar{
   display:none;
@@ -259,6 +260,7 @@ label span{
   overflow-y: auto;
   width: 20%;
   height: 100%;
+  scrollbar-width: none;
 }
 .inst_bar::-webkit-scrollbar{
   display: none;
@@ -386,6 +388,7 @@ label span{
   width: 87.5%;
   height: 5%;
   overflow: scroll;
+  scrollbar-width: none;
 }
 .Measure_grid::-webkit-scrollbar{
   display:none;
@@ -402,6 +405,7 @@ label span{
   width: 100px;
   height: 100%;
   overflow: scroll;
+  scrollbar-width: none;
 }
 .Mscale_grid::-webkit-scrollbar{
   display:none;
@@ -487,6 +491,7 @@ label span{
   background: #000;
   width: 120px;
   top: 110%;
+  text-align: center;
     
   z-index: 1;
   }
@@ -544,4 +549,15 @@ label span{
 }
 .effect_callout{
   display:none;
+}
+.callout_text{
+  text-align: left;
+}
+.shortcut_text{
+  font-weight: bolder;
+  padding-top: 2px;
+}
+.shortcut_text:before{
+  content: "\A";
+  white-space: pre;
 }

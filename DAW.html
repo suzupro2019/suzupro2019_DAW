@@ -18,13 +18,19 @@
     <script type="text/javascript">
       var play_flg = false;
       var help_flg = false;
+      
+      //以下は要保存
       var bpm = 120;
+      var volume = [0, 0, 0, 0]; //全楽器のボリューム情報
+      var pan = [0, 0, 0, 0]; //全楽器のパン情報
+      var effect_selecter = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]; //全楽器のエフェクトのオン/オフ情報
+      //ここまで要保存
       
       var chord_stroke = {};
       var drum_pattern = {};
       
-      //start.htmlから引き継ぎの要素 (ダミーデータは消してください)
-      var Key = "C/Am"; //ダミーデータ
+      //start.htmlから引き継ぎの要素/要保存 (ダミーデータは消してください)
+      var Key = "F/Dm"; //キー
       var Rythem_pattern = "A"; //リズムパターン
       var Artist = "THEE MICHELLE GUN ELEPHANT"; //アーティスト名
       var Generated_chord = "Dm Am Bb F"; //Chainerからのコード進行出力
@@ -69,7 +75,7 @@
         <!--左-->
         <div class="save-button trigger">
           <p id="save"><i class="far fa-save fa-fw"></i></p>
-          <div class="save_callout callout"><p class="callout_text">このボタンをクリックすることで、楽曲データを保存することができます。</p></div>
+          <div class="save_callout callout"><p class="callout_text">このボタンをクリックすることで、楽曲データを保存することができます。</p><span class="shortcut_text">cmd + S</span></div>
         </div>
 
         <div class="help-button trigger">
@@ -88,7 +94,7 @@
             <span class="play-btn"><i class="fas fa-play"></i></span>
             <span class="stop-btn"><i class="far fa-square"></i></span>
           </p>
-          <div class="saisei_callout callout"><p class="callout_text">左のボタンで再生位置を最初に戻す、右のボタンで楽曲を再生することができます。</p></div>
+          <div class="saisei_callout callout"><p class="callout_text">左のボタンで再生位置を最初に戻す、右のボタンで楽曲を再生することができます。</p><span class="shortcut_text">return | space</span></div>
         </div>
 
         <!--右-->
