@@ -163,8 +163,12 @@
                 <div class="pan_callout callout"><p class="callout_text">左右にドラッグすることで、そのパートのパン(音の出る方向)を調整できます。</p></div>
               </div>
               <div class="volume_container trigger">
-                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
-                <div class="volume_callout callout"><p class="callout_text">左右にドラッグすることで、そのパートのボリュームを変更できます。</p></div>
+                <div>
+                  <span class="vol_mark">-</span>
+                  <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+                  <span class="vol_mark">+</span>
+                  <div class="volume_callout callout"><p class="callout_text">左右にドラッグすることで、そのパートのボリュームを変更できます。</p></div>
+                </div>
               </div>
             </div>
             <div class="inst_item_bottom">
@@ -205,12 +209,18 @@
                 </div>
             </div>
             <div class="inst_item_right">
+              <div>
+                  <p>L</p>
+                  <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
+                  <p>R</p>
+              </div>
+              <div class="volume_container">
                 <div>
-                    <p>L</p>
-                    <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
-                    <p>R</p>
+                  <span class="vol_mark">-</span>
+                  <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+                  <span class="vol_mark">+</span>
                 </div>
-                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+              </div>
             </div>
             <div class="inst_item_bottom">
               <details>
@@ -239,7 +249,13 @@
                   <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
                   <p>R</p>
                 </div>
-                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+                <div class="volume_container">
+                  <div>
+                    <span class="vol_mark">-</span>
+                    <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+                    <span class="vol_mark">+</span>
+                  </div>
+                </div>
             </div>
             <div class="inst_item_bottom">
               <details>
@@ -268,7 +284,13 @@
                   <input type="range" class="input-knob pan" autocomplete="off" value="0" min="-1" max="1"step="0.01">
                   <p>R</p>
                 </div>
-                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+                <div class="volume_container">
+                  <div>
+                    <span class="vol_mark">-</span>
+                    <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
+                    <span class="vol_mark">+</span>
+                  </div>
+                </div>
             </div>
             <div class="inst_item_bottom">
               <details>

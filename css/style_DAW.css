@@ -65,7 +65,6 @@ table td {
 }
 td.exartist{
   width:230px;
-  height:70px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
 }
@@ -75,8 +74,7 @@ td.exbar{
   border-bottom-left-radius: 10px;
 }
 td.extime{
-  width:170px;
-  height:70px;
+  width:120px;
 }
 .bpm_slider{
   position: absolute;
@@ -266,13 +264,16 @@ label span{
   display: none;
 }
 .inst_bar p{
-    margin: 0;
+  margin: 0;
 }
 .inst_item{
   display: flex;
   flex-wrap: wrap;
   background-color: white;
   border: 1px solid #222;
+}
+.inst_item:first-of-type{
+  border: 3px solid rgba(255, 20, 147, 0.8);
 }
 .inst_item > div{
   border-radius: 2px;
@@ -342,12 +343,20 @@ label span{
     display: inline;
 }
 .inst_item_right .pan{
-    margin: 8px 0;
+  margin: 8px 0;
   z-index: auto;
 }
 .inst_item_right .volume{
-    width: 80%;
+    width: 70%;
     margin: 8px auto;
+}
+.volume_container > div{
+  display: flex;
+  flex-flow: nowrap;
+  align-items: center;
+}
+.vol_mark{
+  padding: 5px;
 }
 .effect_list{
   margin: 0;

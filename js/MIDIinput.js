@@ -365,21 +365,7 @@ jQuery(function($){
       }
     }
     isMouseDown = false;
-    /*if(line_count > 0){ //長音の処理
-      var note_name = ml_column % 12;
-      var pitch =  Math.ceil((MIDI_Mscale-ml_column) / 12);
-      var MIDI_note = Mscale_C[note_name] + pitch;
-      if(MIDI_Melody[first_line].note == ""){
-        MIDI_Melody[first_line].note.splice(0, 1, MIDI_note);
-        MIDI_Melody[first_line].duration = (16-line_count) + "n";
-      }else{
-        MIDI_Melody[first_line].note.push(MIDI_note);
-        MIDI_Melody[first_line].duration = (16-line_count) + "n";
-      }
-    //長音にならなかった場合 >> 削除  
-    }else if(isShiftDown && MIDI_Melody[ml_line].duration == "16n"){
-      $(".notes").eq(note_position).removeClass("ml_highlighted");
-    }*/
+    
     //変数の初期化
     remove_flg = 0;
     ml_line = 0;
