@@ -270,7 +270,6 @@ jQuery(function($){
     console.log(effect_selecter);
   });
   
-  var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
   for(x=0; x<notes_measure/16; x++){ //
     for(y=0; y<4; y++){
       for(z=0; z<4; z++){
