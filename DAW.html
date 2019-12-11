@@ -36,6 +36,7 @@
       var Rythem_pattern = "A"; //リズムパターン
       var Artist = "THEE MICHELLE GUN ELEPHANT"; //アーティスト名
       var Generated_chord = "Dm Am Bb F"; //Chainerからのコード進行出力
+      var user_name = "Tanaka@example.com"; //メールアドレス　ダミー
     </script>
     <!--以下inst_bar-->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -51,6 +52,8 @@
     <script src="./js/tutorial/highlightjs-line-numbers.min.js"></script>
     <script src="./js/tutorial/swiper.min.js"></script>
     <script src="./js/tutorial/script.js"></script>
+    <!--以下ユーザ管理-->
+    <script src="js/user_manage.js"></script>
   </head>
   <body>
     <div class="main">
@@ -143,6 +146,11 @@
             <input type="range" class="height_scale_bar" min="50" max="150" autocomplete="off">
           </label>
           <div class="scalebar_callout callout"><p class="callout_text">左右にドラッグすることで、打ち込み画面の幅を変更できます。</p></div>
+        </div>
+        <div class="user_prof"></div>
+        <div class="user_window">
+          <p class="user_name">a@example.comさん</p>
+          <p class="logout-btn">ログアウト</p>
         </div>
       </div>
       

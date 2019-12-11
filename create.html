@@ -6,12 +6,15 @@
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
+      //グローバル変数
+      var user_name = "Tanaka@example.com"; //メールアドレス　ダミー
+      var your_project = [ //保存済みプロジェクト
+        {name: "光について", date: "2019/10/31 21:00:33"},
+        {name: "Nobady's Home", date: "2019/11/01 22:10:21"},
+        {name: "雨天決行", date: "2019/12/26 08:34:02"}
+      ];
+      
       $(function(){
-        var your_project = [
-          {name: "光について", date: "2019/10/31 21:00:33"},
-          {name: "Nobady's Home", date: "2019/11/01 22:10:21"},
-          {name: "雨天決行", date: "2019/12/26 08:34:02"}
-        ];
         for(var x=0; x<your_project.length; x++){
           $(".pro_list").append("<li>");
         }
@@ -48,16 +51,18 @@
         });
       });
     </script>
+    <script src="js/user_manage.js"></script>
   </head>
     <body>
       <div class="main">
         <header class="Top_title">
           <h1>Project select</h1>
+          <div class="user_prof"></div>
+          <div class="user_window">
+            <p class="user_name">a@example.comさん</p>
+            <p class="logout-btn">ログアウト</p>
+          </div>
         </header>
-        <div class="user_name">
-          <p>ようこそusernemeさん</p>
-          <p>ログアウト</p>
-        </div>
         <div class="project_select">
           <a href="./start.html">
             <p class="project_item">Create New

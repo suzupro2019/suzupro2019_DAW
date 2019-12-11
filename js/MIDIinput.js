@@ -808,12 +808,12 @@ jQuery(function($){
     if (e.ctrlKey) {
       e.preventDefault();
       e.stopImmediatePropagation();
-
       
       //横幅
-      /*var measure_resize_width = measure_width * ($(".width_scale_bar").val() / 50);
+      
+      /*measure_resize_width = measure_width * ($(".width_scale_bar").val() / 50);
       $(".measures").css("width", measure_resize_width);
-      var note_resize_width = note_width * ($(".width_scale_bar").val() / 50);
+      note_resize_width = note_width * ($(".width_scale_bar").val() / 50);
       $(".notes").css("width", note_resize_width);
       console.log($(".width_scale_bar").val());*/
     }

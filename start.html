@@ -16,6 +16,9 @@
       
       var chord_stroke = {};
       var drum_pattern = {};
+      
+      //引き継ぎ
+      var user_name = "Tanaka@example.com"; //メールアドレス　ダミー
     </script>
     <script src="js/tone.js"></script>
     <script src="js/rythem_pattern.js"></script>
@@ -25,6 +28,8 @@
     <script src="./js/tutorial/highlightjs-line-numbers.min.js"></script>
     <script src="./js/tutorial/swiper.min.js"></script>
     <script src="./js/tutorial/script.js"></script>
+    <!--ユーザ管理-->
+    <script src="./js/user_manage.js"></script>
   </head>
   <body>
     <div class="main">
@@ -51,6 +56,11 @@
         <h1>Deeparture</h1>
         <p class="start_over"><i class="fas fa-directions"></i></p>
         <p class="start_tutorial"><i class="far fa-question-circle"></i></p>
+        <div class="user_prof"></div>
+        <div class="user_window">
+          <p class="user_name">a@example.comさん</p>
+          <p class="logout-btn">ログアウト</p>
+        </div>
       </header>
       <section id="Progress_bar">
           <div class="Progress_number is-active">
