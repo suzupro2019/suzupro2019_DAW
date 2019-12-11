@@ -18,6 +18,7 @@
         for(x=0; x<your_project.length; x++){
           $(".pro_list li").eq(x).append("<span class=\"pro_name\">"+your_project[x].name);
           $(".pro_list li").eq(x).append("<span class=\"pro_date\">"+your_project[x].date);
+          $(".pro_list li").eq(x).append("<span class=\"pro_close\"><i class=\"fas fa-times fa-1x\">");
         }
         
         $(".open_project").click(function(){
@@ -25,6 +26,25 @@
         });
         $(".times").click(function(){
           $(".open_pro_window").css("display", "none");
+        });
+        
+        //プロジェクト削除
+        $(".pro_list li").hover(
+          function() {
+            $(".pro_close").eq($(".pro_list li").index(this)).show();
+          },
+          function() {
+            $(".pro_close").eq($(".pro_list li").index(this)).hide();
+          }
+        );
+        $(".pro_close").click(function(){
+          var pro_idx = $(".pro_close").index(this);
+          if(confirm("本当に「"+your_project[pro_idx].name+"」を削除しますか。")){
+            //Djangoの削除処理を記入
+            $(".pro_list li").eq(pro_idx).remove();
+          }else{
+            return false;
+          }
         });
       });
     </script>
@@ -34,6 +54,10 @@
         <header class="Top_title">
           <h1>Project select</h1>
         </header>
+        <div class="user_name">
+          <p>ようこそusernemeさん</p>
+          <p>ログアウト</p>
+        </div>
         <div class="project_select">
           <a href="./start.html">
             <p class="project_item">Create New

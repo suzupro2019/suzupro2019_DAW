@@ -14,6 +14,12 @@ li{
   list-style: none;
   margin: 0;
 }
+details li{
+  cursor: pointer;
+}
+details li:hover{
+  opacity: 0.8;
+}
 input{
   cursor: pointer;
 }
@@ -274,6 +280,20 @@ label span{
 }
 .inst_item:first-of-type{
   border: 3px solid rgba(255, 20, 147, 0.8);
+}
+.inst_item_chord{
+  display: flex;
+  flex-direction: column;
+}
+.inst_item_chord > div{
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.inst_item_chord summary{
+  border-bottom: 1px solid #333;
 }
 .inst_item > div{
   border-radius: 2px;

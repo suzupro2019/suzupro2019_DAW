@@ -143,8 +143,9 @@ jQuery(function($){
   ローカルで起動する場合はWebブラウザの設定が必要。
   Firefoxならstrict_origin_policy = True(既定値) → Falseにする。(非推奨)*/
   var Piano_sampler = new Tone.Sampler({
-    "C4" : "./audio/Piano_C4.wav",
+    "C3" : "./audio/Piano/Piano_C3.wav",
   }, {attack:0.05 ,release:1.0}).toMaster();
+  var Guitar_sampler = new Tone.Sampler({"C3" : "./audio/Guitar/GuitarC4.wav",},{attack:0.05,release:2.0}).toMaster();
   var Drum_sampler = new Tone.Sampler({
     "C1" : "./audio/Drum/Kick_C1.wav",
     "C#1" : "./audio/Drum/Snare_Cs1.wav",
@@ -164,7 +165,8 @@ jQuery(function($){
     "E2" : "./audio/Drum/OH_E2.wav"
   }).toMaster();
   //メロディ・コード・ベース・ドラムのinst情報
-  var Instruments = [polysynth_melody, polysynth_chord, plucksynth, Drum_sampler];
+  const Chord_inst = [Guitar_sampler, polysynth_chord, Piano_sampler]; //コード用楽器リスト
+  var Instruments = [polysynth_melody, Chord_inst[chord_idx], plucksynth, Drum_sampler];
   
   function addMelody(time, note) {
     Instruments[0].triggerAttackRelease(note.note, note.duration, time);
@@ -178,6 +180,19 @@ jQuery(function($){
   function addDrum(time, note) {
     Instruments[3].triggerAttackRelease(note, '1n', time);
   }
+  
+  //楽器選択(コード)
+  var chord_inst_name = $(".chord_inst_item").eq(chord_idx).html();
+  $(".chord_inst").html(chord_inst_name);
+  
+  $(".chord_inst_item").on("click", function(){
+    chord_idx = $(".chord_inst_item").index(this);
+    Instruments[1] = Chord_inst[chord_idx];
+    chord_inst_name = $(".chord_inst_item").eq(chord_idx).html();
+    $(".chord_inst").html(chord_inst_name);
+    $(".inst_item_chord > details").removeAttr("open");
+  });
+  
   
   //ボリューム・ミュート・パン
   //ボリューム

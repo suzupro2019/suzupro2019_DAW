@@ -22,6 +22,7 @@
       //以下は要保存
       var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
       var bpm = 120;
+      var chord_idx = 0; //コードの楽器番号
       var volume = [0, 0, 0, 0]; //全楽器のボリューム情報
       var pan = [0, 0, 0, 0]; //全楽器のパン情報
       var effect_selecter = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]; //全楽器のエフェクトのオン/オフ情報
@@ -202,12 +203,22 @@
             </div>
         </div>
         <div class="inst_item">
-            <div class="inst_item_left">
+            <div class="inst_item_left inst_item_chord">
+              <div>
                 <p>Chord</p>
                 <div class="mute">
                   <span><i class="fas fa-volume-up"></i></span>
                   <span><i class="fas fa-volume-mute"></i></span>
                 </div>
+              </div>
+              <details>
+                <summary class="chord_inst">ギター</summary>
+                <ul class="chord_inst_list">
+                  <li class="chord_inst_item">ギター</li>
+                  <li class="chord_inst_item">シンセサイザー</li>
+                  <li class="chord_inst_item">ピアノ</li>
+                </ul>
+              </details>
             </div>
             <div class="inst_item_right">
               <div>
