@@ -254,7 +254,9 @@ jQuery(function($){
   effect_list[1] = new Tone.Chorus().toMaster(); //コーラス
   effect_list[2] = new Tone.Distortion().toMaster(); //ディストーション
   effect_list[3] = new Tone.FeedbackDelay().toMaster(); //ディレイ
-  effect_list[4] = new Tone.AutoWah(50, 6, -30).toMaster(); //ワウ
+  effect_list[4] = new Tone.AutoWah(50, 8, 0).toMaster(); //ワウ
+  effect_list[4].Q.value = 6;
+  console.log(effect_list[4])
   
   //エフェクトコントロール関数
   function ef_control(inst, idx, load){ //配列の値が1ならエフェクトオン loadなら処理をスキップ
