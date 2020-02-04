@@ -61,7 +61,7 @@ jQuery(function($){
   //音階
   for(var i = 0; i < MIDI_Mscale; i++){
     var Mscale_index = Math.ceil((MIDI_Mscale-i) / 7); //国際式はi-12 ヤマハ式はi-24
-    $(".Mscale_grid").append("<div class=\"Mscale_notes\"><p>" + Scales_DoReMi[Key][i%7] + Mscale_index);
+    $(".Mscale_grid").append("<div class=\"Mscale_notes\"><p>" + Scales[Key][i%7] + Mscale_index);
   }
   //入力部分
   for(var j = 0; j < notes_measure; j++){
@@ -323,7 +323,6 @@ jQuery(function($){
     var note_name = note_position % 7;
     var pitch =  Math.ceil((MIDI_Mscale-note_position%MIDI_Mscale) / 7);
     var MIDI_note = Scales[Key][note_name] + pitch;
-    //var measure_count = $(this).parent().index();
     var measure_count = $(this).parent().index(".MIDI_notes");
     console.log("measure:" + measure_count);
     if($(this).hasClass('highlighted') == false){
@@ -353,7 +352,7 @@ jQuery(function($){
       var note_name = note_position % 7;
       var pitch =  Math.ceil((MIDI_Mscale-note_position%MIDI_Mscale) / 7);
       var MIDI_note = Scales[Key][note_name] + pitch;
-      var measure_count = $(this).parent().index();
+      var measure_count = $(this).parent().index(".MIDI_notes");
       if($(this).hasClass('highlighted') == false){
         Instruments[0].triggerAttackRelease(MIDI_note, '16n');
 
