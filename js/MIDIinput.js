@@ -323,7 +323,9 @@ jQuery(function($){
     var note_name = note_position % 7;
     var pitch =  Math.ceil((MIDI_Mscale-note_position%MIDI_Mscale) / 7);
     var MIDI_note = Scales[Key][note_name] + pitch;
-    var measure_count = $(this).parent().index();
+    //var measure_count = $(this).parent().index();
+    var measure_count = $(this).parent().index(".MIDI_notes");
+    console.log("measure:" + measure_count);
     if($(this).hasClass('highlighted') == false){
       Instruments[0].triggerAttackRelease(MIDI_note, '16n');
 
@@ -364,13 +366,15 @@ jQuery(function($){
           console.log("追加");
           console.log(MIDI_Melody);
         }
+        $(this).addClass("highlighted");
       }else{
         var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count].note);
         MIDI_Melody[measure_count].note.splice(highlight_index, 1);
         console.log("削除");
         console.log(MIDI_Melody);
+        $(this).removeClass("highlighted");
       }
-      $(this).toggleClass("highlighted");
+      //$(this).toggleClass("highlighted");
     }
   })
   .bind("selectstart", function () {
@@ -563,7 +567,7 @@ jQuery(function($){
     console.log("保存データ読み込み")
     console.log(MIDI_Melody);
   };
-  Melody_display(test_Melody); //ダミーデータを読み込み >> 保存データを読み込み
+  //Melody_display(test_Melody); //ダミーデータを読み込み >> 保存データを読み込み
   
   
   //コード(文字列からの生成)
