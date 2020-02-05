@@ -142,6 +142,13 @@ jQuery(function($){
   初期状態ではXHRでローカルファイルを持ってくることはセキュリティ上できないため、
   ローカルで起動する場合はWebブラウザの設定が必要。
   Firefoxならstrict_origin_policy = True(既定値) → Falseにする。(非推奨)*/
+  var Vocaloid_sampler = new Tone.Sampler({
+    "C3":"./audio/Vocaloid/C3.mp3",
+    "G3":"./audio/Vocaloid/G3.mp3",
+    "C4":"./audio/Vocaloid/C4.mp3",
+    "G4":"./audio/Vocaloid/G4.mp3",
+    "C5":"./audio/Vocaloid/C5.mp3"
+  }).toMaster();
   var Piano_sampler = new Tone.Sampler({
     "C3" : "./audio/Piano/Piano_C3.wav",
   }, {attack:0.05 ,release:1.0}).toMaster();
@@ -165,8 +172,9 @@ jQuery(function($){
     "E2" : "./audio/Drum/OH_E2.wav"
   }).toMaster();
   //メロディ・コード・ベース・ドラムのinst情報
+  const Melody_inst = [polysynth_melody, Vocaloid_sampler];
   const Chord_inst = [Guitar_sampler, polysynth_chord, Piano_sampler]; //コード用楽器リスト
-  var Instruments = [polysynth_melody, Chord_inst[chord_idx], plucksynth, Drum_sampler];
+  var Instruments = [Melody_inst[melody_idx], Chord_inst[chord_idx], plucksynth, Drum_sampler];
   
   function addMelody(time, note) {
     Instruments[0].triggerAttackRelease(note.note, note.duration, time);
