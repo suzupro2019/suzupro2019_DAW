@@ -22,7 +22,7 @@
       //以下は要保存
       var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
       var bpm = 120;
-      var melody_idx = 1;
+      var melody_idx = 0;
       var chord_idx = 0; //コードの楽器番号
       var volume = [0, 0, 0, 0]; //全楽器のボリューム情報
       var pan = [0, 0, 0, 0]; //全楽器のパン情報
@@ -159,13 +159,22 @@
       <div class="DAW_main">
         <section class="inst_bar">
           <div class="inst_item">
-            <div class="inst_item_left">
+            <div class="inst_item_left inst_item_melody">
+              <div>
                 <p>Melody</p>
                 <div class="mute trigger">
                   <span><i class="fas fa-volume-up"></i></span>
                   <span><i class="fas fa-volume-mute"></i></span>
                   <div class="mute_callout callout"><p class="callout_text">ボタンをクリックすることで、そのパートをミュート状態に切り替えることができます。</p></div>
                 </div>
+              </div>
+              <details>
+                <summary class="melody_inst">シンセサイザー</summary>
+                <ul class="melody_inst_list">
+                  <li class="melody_inst_item">シンセサイザー</li>
+                  <li class="melody_inst_item">ボーカロイド</li>
+                </ul>
+              </details>
             </div>
             <div class="inst_item_right">
               <div class="trigger">

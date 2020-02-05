@@ -189,6 +189,26 @@ jQuery(function($){
     Instruments[3].triggerAttackRelease(note, '1n', time);
   }
   
+  //楽器選択(メロディ)
+  var melody_inst_name = $(".melody_inst_item").eq(melody_idx).html();
+  $(".melody_inst").html(melody_inst_name);
+  
+  $(".melody_inst_item").on("click", function(){
+    melody_idx = $(".melody_inst_item").index(this);
+    //楽器のボリューム等の情報を渡す
+    if($(".mute").eq(0).hasClass("active")){
+      Melody_inst[melody_idx].volume.value = -Infinity; //ミュート
+    }else{
+      Melody_inst[melody_idx].volume.value = volume[0]; //ボリューム
+    }
+    Melody_inst[melody_idx].connect(efpan[0]); //エフェクト・パン
+    
+    Instruments[0] = Melody_inst[melody_idx];
+    melody_inst_name = $(".melody_inst_item").eq(melody_idx).html();
+    $(".melody_inst").html(melody_inst_name);
+    $(".inst_item_melody > details").removeAttr("open");
+  });
+  
   //楽器選択(コード)
   var chord_inst_name = $(".chord_inst_item").eq(chord_idx).html();
   $(".chord_inst").html(chord_inst_name);
@@ -223,7 +243,9 @@ jQuery(function($){
     var idx = $(".volume").index(this);
     volume[idx] = $(this).val();
     $('.volume').eq(idx).html(volume[idx]);
-    Instruments[idx].volume.value = volume[idx];
+    if($(".mute").eq(idx).hasClass("active") == false){
+      Instruments[idx].volume.value = volume[idx];
+    }
   });
   
   //ミュート
